@@ -11,6 +11,7 @@ import (
 // settings_schema via OnConfigurationChange.
 type configuration struct {
 	TorqWebhookURL         string
+	TorqWebhookSecretKey   string
 	TorqWebhookSecret      string
 	SyncAllPrivateChannels bool
 	ChannelAllowList       string
@@ -81,7 +82,7 @@ func (p *Plugin) OnConfigurationChange() error {
 	cfg.buildDerived()
 
 	if cfg.TorqWebhookURL == "" {
-		p.API.LogWarn("SOAR Sync: TorqWebhookURL is not configured; events will not be forwarded")
+		p.API.LogWarn("Torq Sync: TorqWebhookURL is not configured; events will not be forwarded")
 	}
 
 	p.confStore.set(&cfg)

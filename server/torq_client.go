@@ -57,20 +57,20 @@ func (c *torqClient) send(evt eventEnvelope) {
 
 		body, err := json.Marshal(evt)
 		if err != nil {
-			c.plugin.API.LogError("SOAR Sync: failed to marshal event", "err", err.Error())
+			c.plugin.API.LogError("Torq Sync: failed to marshal event", "err", err.Error())
 			return
 		}
 
 		for attempt := 1; attempt <= maxAttempts; attempt++ {
 			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-			err := c.post(ctx, cfg.TorqWebhookURL, cfg.TorqWebhookSecret, body)
+			err := c.post(ctx, cfg.TorqWebhookURL, cfg.TorqWebhookSecretKey, cfg.TorqWebhookSecret, body)
 			cancel()
 
 			if err == nil {
 				return
 			}
 
-			c.plugin.API.LogWarn("SOAR Sync: failed to deliver event to Torq",
+			c.plugin.API.LogWarn("Torq Sync: failed to deliver event to Torq",
 				"attempt", attempt,
 				"event_type", evt.EventType,
 				"channel_id", evt.ChannelID,
@@ -83,21 +83,21 @@ func (c *torqClient) send(evt eventEnvelope) {
 			}
 		}
 
-		c.plugin.API.LogError("SOAR Sync: exhausted retries delivering event to Torq",
+		c.plugin.API.LogError("Torq Sync: exhausted retries delivering event to Torq",
 			"event_type", evt.EventType,
 			"channel_id", evt.ChannelID,
 		)
 	}()
 }
 
-func (c *torqClient) post(ctx context.Context, url, secret string, body []byte) error {
+func (c *torqClient) post(ctx context.Context, url, secretkey string, secret string, body []byte) error {
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(body))
 	if err != nil {
 		return fmt.Errorf("building request: %w", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	if secret != "" {
-		req.Header.Set("X-Webhook-Secret", secret)
+	if secretkey != "" && secret != ""  {
+		req.Header.Set(secretkey, secret)
 	}
 
 	resp, err := c.httpClient.Do(req)

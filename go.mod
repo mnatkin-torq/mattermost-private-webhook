@@ -1,4 +1,4 @@
-module github.com/yourorg/mattermost-soar-sync
+module github.com/yourorg/mattermost-torq-sync
 
 go 1.21
 

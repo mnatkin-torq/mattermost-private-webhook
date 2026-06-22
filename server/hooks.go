@@ -11,11 +11,11 @@ import (
 // channel ("P" type in Mattermost's model). Group messages ("G") and direct
 // messages ("D") are deliberately excluded here -- treat those as a separate
 // decision since they have different membership/consent semantics. Adjust
-// this if your SOAR use case should also cover DMs/GMs.
+// this if your Torq use case should also cover DMs/GMs.
 func (p *Plugin) isPrivateChannel(channelID string) (*model.Channel, bool) {
 	channel, appErr := p.API.GetChannel(channelID)
 	if appErr != nil {
-		p.API.LogWarn("SOAR Sync: failed to look up channel", "channel_id", channelID, "err", appErr.Error())
+		p.API.LogWarn("Torq Sync: failed to look up channel", "channel_id", channelID, "err", appErr.Error())
 		return nil, false
 	}
 	return channel, channel.Type == model.ChannelTypePrivate

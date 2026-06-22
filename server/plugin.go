@@ -26,11 +26,11 @@ func (p *Plugin) OnActivate() error {
 		Timeout: 10 * time.Second,
 	}, p)
 
-	p.API.LogInfo("SOAR Sync plugin activated")
+	p.API.LogInfo("Torq Sync plugin activated")
 	return nil
 }
 
 func (p *Plugin) OnDeactivate() error {
-	p.API.LogInfo("SOAR Sync plugin deactivated")
+	p.API.LogInfo("Torq Sync plugin deactivated")
 	return nil
 }

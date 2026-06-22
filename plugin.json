@@ -1,9 +1,9 @@
 {
-  "id": "com.yourorg.soar-sync",
-  "name": "SOAR Sync",
-  "description": "Forwards private channel events (messages, membership changes) to Torq via HTTP webhook for SOAR ingestion.",
-  "homepage_url": "https://example.com",
-  "support_url": "https://example.com/support",
+  "id": "com.yourorg.torq-sync",
+  "name": "Torq Sync",
+  "description": "Forwards private channel events (messages, membership changes) to Torq via HTTP webhook trigger.",
+  "homepage_url": "https://torq.io",
+  "support_url": "https://support.torq.io",
   "version": "0.1.0",
   "min_server_version": "7.8.0",
   "server": {
@@ -15,7 +15,7 @@
     }
   },
   "settings_schema": {
-    "header": "Configure where private channel events are sent for SOAR ingestion.",
+    "header": "Configure where private channel events are sent for Torq ingestion.",
     "settings": [
       {
         "key": "TorqWebhookURL",
@@ -25,10 +25,17 @@
         "default": ""
       },
       {
+        "key": "TorqWebhookSecretKey",
+        "display_name": "Torq Webhook Secret Key",
+        "type": "text",
+        "help_text": "Shared secret Key. Configure the matching key as a condition in your Torq webhook trigger.",
+        "default": "X-Mattermost-Secret"
+      },
+      {
         "key": "TorqWebhookSecret",
         "display_name": "Torq Webhook Secret",
         "type": "text",
-        "help_text": "Shared secret sent as X-Webhook-Secret header. Configure the matching value as a condition in your Torq webhook trigger.",
+        "help_text": "Shared secret sent as X-Mattermost-Secret header. Configure the matching value as a condition in your Torq webhook trigger.",
         "secret": true,
         "default": ""
       },
@@ -50,7 +57,7 @@
         "key": "IncludeMessageContent",
         "display_name": "Include message body in payload",
         "type": "bool",
-        "help_text": "If disabled, only metadata (channel, user, post ID, timestamp) is sent — not the message text. Recommended off unless your SOAR use case requires content inspection.",
+        "help_text": "If disabled, only metadata (channel, user, post ID, timestamp) is sent — not the message text. Recommended off unless your Torq use case requires content inspection.",
         "default": false
       }
     ]

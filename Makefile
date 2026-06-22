@@ -1,4 +1,4 @@
-PLUGIN_ID := com.yourorg.soar-sync
+PLUGIN_ID := com.yourorg.torq-sync
 BUNDLE_NAME := $(PLUGIN_ID).tar.gz
 
 GO := go
