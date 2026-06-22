@@ -1,0 +1,58 @@
+{
+  "id": "com.yourorg.soar-sync",
+  "name": "SOAR Sync",
+  "description": "Forwards private channel events (messages, membership changes) to Torq via HTTP webhook for SOAR ingestion.",
+  "homepage_url": "https://example.com",
+  "support_url": "https://example.com/support",
+  "version": "0.1.0",
+  "min_server_version": "7.8.0",
+  "server": {
+    "executables": {
+      "linux-amd64": "server/dist/plugin-linux-amd64",
+      "linux-arm64": "server/dist/plugin-linux-arm64",
+      "darwin-amd64": "server/dist/plugin-darwin-amd64",
+      "darwin-arm64": "server/dist/plugin-darwin-arm64"
+    }
+  },
+  "settings_schema": {
+    "header": "Configure where private channel events are sent for SOAR ingestion.",
+    "settings": [
+      {
+        "key": "TorqWebhookURL",
+        "display_name": "Torq Webhook URL",
+        "type": "text",
+        "help_text": "The Torq webhook trigger URL events will be POSTed to.",
+        "default": ""
+      },
+      {
+        "key": "TorqWebhookSecret",
+        "display_name": "Torq Webhook Secret",
+        "type": "text",
+        "help_text": "Shared secret sent as X-Webhook-Secret header. Configure the matching value as a condition in your Torq webhook trigger.",
+        "secret": true,
+        "default": ""
+      },
+      {
+        "key": "SyncAllPrivateChannels",
+        "display_name": "Sync all private channels",
+        "type": "bool",
+        "help_text": "If enabled, events from every private channel are forwarded. If disabled, only channels listed below are forwarded.",
+        "default": true
+      },
+      {
+        "key": "ChannelAllowList",
+        "display_name": "Channel ID allow-list (comma-separated)",
+        "type": "longtext",
+        "help_text": "Only used when 'Sync all private channels' is disabled. Comma-separated list of channel IDs to forward events for.",
+        "default": ""
+      },
+      {
+        "key": "IncludeMessageContent",
+        "display_name": "Include message body in payload",
+        "type": "bool",
+        "help_text": "If disabled, only metadata (channel, user, post ID, timestamp) is sent — not the message text. Recommended off unless your SOAR use case requires content inspection.",
+        "default": false
+      }
+    ]
+  }
+}
