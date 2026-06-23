@@ -12,6 +12,9 @@ This requires System Admin access to install, and someone to maintain a small Go
 
 ## Building and deploying (if starting from source)
 
+### System Requirements
+This PlugIn requires a Mattermost minimum server version of 7.8.0
+
 ### To build from source
 ```
 tar -xzf mattermost-torq-sync.tar.gz
@@ -26,6 +29,7 @@ On the Torq side: create an HTTP webhook trigger, add a condition checking that 
 
 
 ## VERSION HISTORY
+0.2.0 - 2026-06-22 - Clean-up, additional improvements
 0.1.0 - 2026-06-18 - Initial draft
 
 ## DEVELOPMENT NOTES
