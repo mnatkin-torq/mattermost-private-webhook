@@ -1,4 +1,4 @@
-PLUGIN_ID := com.yourorg.torq-sync
+PLUGIN_ID := io.torq.torq-sync
 BUNDLE_NAME := $(PLUGIN_ID).tar.gz
 
 GO := go
@@ -18,7 +18,7 @@ server:
 dist: server
 	mkdir -p dist/$(PLUGIN_ID)
 	cp plugin.json dist/$(PLUGIN_ID)/
-	cp -r server/dist dist/$(PLUGIN_ID)/server
+	cp -r server/dist dist/$(PLUGIN_ID)/server/dist/
 	cd dist && tar -czf $(BUNDLE_NAME) $(PLUGIN_ID)
 	@echo "Bundle ready at dist/$(BUNDLE_NAME) -- upload via System Console > Plugins > Plugin Management"
 
