@@ -1,4 +1,4 @@
-module github.com/yourorg/mattermost-torq-sync
+module github.com/mnatkin-torq/mattermost-private-webhook
 
 go 1.21
 

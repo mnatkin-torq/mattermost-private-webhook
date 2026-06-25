@@ -1,3 +1,6 @@
+// Torq Private Channel Sync
+// version 0.5.0
+
 package main
 
 import (

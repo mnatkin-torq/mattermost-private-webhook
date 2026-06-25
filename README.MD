@@ -29,6 +29,7 @@ On the Torq side: create an HTTP webhook trigger, add a condition checking that 
 
 
 ## VERSION HISTORY
+0.5.0 - 2026-06-25 - Bugfixes
 0.2.0 - 2026-06-22 - Clean-up, additional improvements
 0.1.0 - 2026-06-18 - Initial draft
 
