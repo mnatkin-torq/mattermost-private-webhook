@@ -28,7 +28,37 @@ make dist
 Create an HTTP webhook trigger, add your desired Authentication shared secret header (optional).  In your workflow(s) using using the webhook trigger,  branch on event_type in the payload for your desired activities.
 
 #### In Mattermost
-Upload mattermost-torq-private-sync.tar.gz via System Console → Plugins → Plugin Management, then configure the Torq webhook URL, Authentication shared secret key, and secret value in the plugin's settings page.
+##### TL;DR: 
+Upload mattermost-torq-private-sync.tar.gz via System Console → Plugins → Plugin Management 
+##### Step-by-step:
+1. Navigate to the System Console
+2. Scroll to the PlugIns Section on the left Nav Bar
+3. Click on `PlugIn Management` in that section
+4. On the `PlugIn Management` configuration screen
+   a) Ensure that `Enable Plugins` is set to `True`
+   b) Navigate to the `Upload Plugin` section and click the `Choose File` button
+   c) Select the mattermost-torq-private-sync.tar.gz file from the file picker
+   d) Click the "Upload" button
+5. If completed successfully, you should see "Successfully uploaded plugin from mattermost-torq-private-sync.tar.gz" 
+
+### Configure
+Once deployed, `Torq Private Channel Sync` should appear in the Nav Sidebar under the `PlugIns` section. Navigate to this section to configure the PlugIn
+##### Step-by-step:
+1. Navigate to the System Console
+2. Scroll to the PlugIns Section on the left Nav Bar
+3. Click on "Torq Private Channel Sync" in that section
+4. Set `Enable Plugin` to `True`
+5. Paste your Torq Webhook URL into the `Torq Webhook URL` dialogue box (generally `https://hooks.[eu.|jp.]torq.io/v1/webhooks/<UUID>`)
+6. (Optional but recommended) Add an Authentication Header (shared secret) as configured in your Torq Webhook
+7. Select whether to sync all private channels or selected channels only
+   * In `Sync all private channels` set either `True` or `False`
+   * If `False`, choose the channels to sync in the `Channel ID allow-list (comma-separated)` parameter
+8) Choose whether to include the message body in the trigger payload.  
+   * In `Include message body in payload` set either `True` or `False`
+   * If `True`, the message will be included in the trigger payload. If `False` only metadata (channel, user, post ID, timestamp) is sent.  A separate action will be required to pull the payload. 
+9) Click `Save` to save your settings
+10) Navigate back to the `PlugIn Management` configuration screen.  Scroll to the bottom of the page, to the `Installed Plugins` section.  You should see `Torq Private Channel Sync (mattermost-torq-private-sync - <version>)` listed and a green checked `This plugin is running` notice.
+   
 
 
 ## VERSION HISTORY

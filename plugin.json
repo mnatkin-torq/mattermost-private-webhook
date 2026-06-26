@@ -21,7 +21,7 @@
         "key": "TorqWebhookURL",
         "display_name": "Torq Webhook URL",
         "type": "text",
-        "help_text": "The Torq webhook trigger to which URL events will be POSTed. This is required.",
+        "help_text": "The configured Torq webhook trigger URL where events will be POSTed (generally `https://hooks.[eu.|jp.]torq.io/v1/webhooks/<UUID>`). This is required.",
         "default": ""
       },
       {
@@ -57,8 +57,8 @@
         "key": "IncludeMessageContent",
         "display_name": "Include message body in payload",
         "type": "bool",
-        "help_text": "If disabled, only metadata (channel, user, post ID, timestamp) is sent — not the message text. Recommended off unless your Torq use case requires content inspection.",
-        "default": false
+        "help_text": "If disabled, only metadata (channel, user, post ID, timestamp) is sent — not the message text. If disabled, a separate action will be required to pull the payload",
+        "default": true
       }
     ]
   }
