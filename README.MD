@@ -85,56 +85,112 @@ Note: Mattermost won't surface private channel content to a bot or webhook that 
 #### Post Created
 ```
 {
-  "event_type": "post_created",
-  "timestamp_ms": 1782480519794,
-  "message": "Hello world!",
-  "post_id": "raher4m873bhir5wjedecyys8w",
+  "timestamp_ms": 1782511625322,
+  "channel_display_name": "My Private Channel",
   "team_id": "38zj3sdt5fbxmniu7q8qmafrsh",
   "user_id": "3tr7wn3nzj8qzqz58pek5dmuar",
-  "channel_id": "5fqak1si8irgz8f845gfhbzh8o"
+  "channel_id": "5fqak1si8irgz8f845gfhbzh8o",
+  "event_type": "post_created",
+  "is_reply": false,
+  "message": "Hello world!",
+  "has_attachments": false,
+  "post_id": "uorzhb4ni3rc9edkm7sa8w8wkh"
 }
 ```
+
+#### Response Post Created
+```
+{
+  "post_id": "zkgw55txiprgixd6sifhk1mjzr",
+  "has_attachments": false,
+  "team_id": "38zj3sdt5fbxmniu7q8qmafrsh",
+  "channel_id": "5fqak1si8irgz8f845gfhbzh8o",
+  "reply_count": 1,
+  "root_post_id": "uorzhb4ni3rc9edkm7sa8w8wkh",
+  "message": "Hello to you! 👋 ",
+  "user_id": "3tr7wn3nzj8qzqz58pek5dmuar",
+  "is_reply": true,
+  "event_type": "post_created",
+  "channel_display_name": "My Private Channel",
+  "timestamp_ms": 1782511832660
+}
+```
+
 #### Post Updated
 ```
 {
+  "timestamp_ms": 1782511765305,
+  "has_attachments": false,
   "message": "שלום ",
-  "post_id": "zqwffeyhff8zdjcgkcirf5itra",
+  "post_id": "uorzhb4ni3rc9edkm7sa8w8wkh",
   "team_id": "38zj3sdt5fbxmniu7q8qmafrsh",
-  "user_id": "3tr7wn3nzj8qzqz58pek5dmuar",
-  "channel_id": "5fqak1si8irgz8f845gfhbzh8o",
-  "event_type": "post_updated",
-  "timestamp_ms": 1782482948835,
+  "channel_display_name": "My Private Channel",
   "extra": {
-    "previous_message": "Glad tidings unto you."
-  }
+    "previous_message": "Greetings, Earthlings!"
+  },
+  "user_id": "3tr7wn3nzj8qzqz58pek5dmuar",
+  "is_reply": false,
+  "edited_at": 1782511765300,
+  "channel_id": "5fqak1si8irgz8f845gfhbzh8o",
+  "event_type": "post_updated"
 }
 ```
+
+#### Response Post Updated
+```
+{
+  "channel_display_name": "My Private Channel",
+  "message": "Thank you 👍 !",
+  "post_id": "zkgw55txiprgixd6sifhk1mjzr",
+  "team_id": "38zj3sdt5fbxmniu7q8qmafrsh",
+  "is_reply": true,
+  "event_type": "post_updated",
+  "has_attachments": false,
+  "extra": {
+    "previous_message": "Hello to you! 👋 "
+  },
+  "channel_id": "5fqak1si8irgz8f845gfhbzh8o",
+  "edited_at": 1782511927137,
+  "root_post_id": "uorzhb4ni3rc9edkm7sa8w8wkh",
+  "user_id": "3tr7wn3nzj8qzqz58pek5dmuar",
+  "reply_count": 1,
+  "timestamp_ms": 1782511927146
+}
+```
+
 #### Reaction Added
 ```
 {
-  "post_id": "zqwffeyhff8zdjcgkcirf5itra",
-  "team_id": "38zj3sdt5fbxmniu7q8qmafrsh",
-  "user_id": "3tr7wn3nzj8qzqz58pek5dmuar",
-  "channel_id": "5fqak1si8irgz8f845gfhbzh8o",
-  "event_type": "reaction_added",
-  "timestamp_ms": 1782482891468,
-  "extra": {
-    "emoji_name": "wave"
-  }
-}
-```
-#### Reaction Removed
-```
-{
-  "timestamp_ms": 1782483108995,
+  "is_reply": false,
+  "timestamp_ms": 1782511685572,
+  "channel_display_name": "My Private Channel",
   "extra": {
     "emoji_name": "wave"
   },
-  "post_id": "zqwffeyhff8zdjcgkcirf5itra",
-  "team_id": "38zj3sdt5fbxmniu7q8qmafrsh",
-  "user_id": "3tr7wn3nzj8qzqz58pek5dmuar",
   "channel_id": "5fqak1si8irgz8f845gfhbzh8o",
-  "event_type": "reaction_removed"
+  "has_attachments": false,
+  "post_id": "uorzhb4ni3rc9edkm7sa8w8wkh",
+  "event_type": "reaction_added",
+  "team_id": "38zj3sdt5fbxmniu7q8qmafrsh",
+  "user_id": "3tr7wn3nzj8qzqz58pek5dmuar"
+}
+```
+
+#### Reaction Removed
+```
+{
+  "extra": {
+    "emoji_name": "wave"
+  },
+  "channel_id": "5fqak1si8irgz8f845gfhbzh8o",
+  "event_type": "reaction_removed",
+  "team_id": "38zj3sdt5fbxmniu7q8qmafrsh",
+  "timestamp_ms": 1782511724134,
+  "channel_display_name": "My Private Channel",
+  "post_id": "uorzhb4ni3rc9edkm7sa8w8wkh",
+  "user_id": "3tr7wn3nzj8qzqz58pek5dmuar",
+  "has_attachments": false,
+  "is_reply": false
 }
 ```
 
