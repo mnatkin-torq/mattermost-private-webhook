@@ -1,5 +1,9 @@
 // Torq Private Channel Sync
-// version 0.5.0
+//
+// hooks.go
+// The core logic: filters every event to private channels only, then forwards defined event types
+//
+// version 1.1.0
 
 package main
 
@@ -15,6 +19,7 @@ import (
 // messages ("D") are deliberately excluded here -- treat those as a separate
 // decision since they have different membership/consent semantics. Adjust
 // this if your Torq use case should also cover DMs/GMs.
+
 func (p *Plugin) isPrivateChannel(channelID string) (*model.Channel, bool) {
 	channel, appErr := p.API.GetChannel(channelID)
 	if appErr != nil {
@@ -44,6 +49,7 @@ func (p *Plugin) shouldForward(channelID string) (*model.Channel, bool) {
 
 // MessageHasBeenPosted fires after a post is committed to the database.
 // Minimum server version: 5.2
+
 func (p *Plugin) MessageHasBeenPosted(c *plugin.Context, post *model.Post) {
 	if post.IsSystemMessage() {
 		return
@@ -56,23 +62,30 @@ func (p *Plugin) MessageHasBeenPosted(c *plugin.Context, post *model.Post) {
 
 	cfg := p.getConfiguration()
 	evt := eventEnvelope{
-		EventType: "post_created",
-		Timestamp: time.Now().UnixMilli(),
-		TeamID:    channel.TeamId,
-		ChannelID: post.ChannelId,
-		UserID:    post.UserId,
-		PostID:    post.Id,
+		EventType:          "post_created",
+		Timestamp:          time.Now().UnixMilli(),
+		TeamID:             channel.TeamId,
+		ChannelID:          post.ChannelId,
+		ChannelDisplayName: channel.DisplayName,
+		UserID:             post.UserId,
+		PostID:             post.Id,
+		PostType:           post.Type,
+		FileIDs:            post.FileIds,
+		HasAttachments:     len(post.FileIds) > 0,
+		RootID:             post.RootId,
+		IsReply:            post.RootId != "",
+		ReplyCount:         post.ReplyCount,
 	}
 	if cfg.IncludeMessageContent {
 		evt.Message = post.Message
 	}
-
 	p.torqClient.send(evt)
 }
 
 // UserHasJoinedChannel fires after a user is added to a channel, whether by
 // themselves, an admin, or a plugin/bot.
 // Minimum server version: 5.2
+
 func (p *Plugin) UserHasJoinedChannel(c *plugin.Context, channelMember *model.ChannelMember, actor *model.User) {
 	channel, ok := p.shouldForward(channelMember.ChannelId)
 	if !ok {
@@ -84,6 +97,7 @@ func (p *Plugin) UserHasJoinedChannel(c *plugin.Context, channelMember *model.Ch
 		Timestamp:    time.Now().UnixMilli(),
 		TeamID:       channel.TeamId,
 		ChannelID:    channelMember.ChannelId,
+		ChannelDisplayName: channel.DisplayName,
 		TargetUserID: channelMember.UserId,
 	}
 	if actor != nil {
@@ -95,6 +109,7 @@ func (p *Plugin) UserHasJoinedChannel(c *plugin.Context, channelMember *model.Ch
 
 // UserHasLeftChannel fires after a user is removed from or leaves a channel.
 // Minimum server version: 5.2
+
 func (p *Plugin) UserHasLeftChannel(c *plugin.Context, channelMember *model.ChannelMember, actor *model.User) {
 	channel, ok := p.shouldForward(channelMember.ChannelId)
 	if !ok {
@@ -106,6 +121,7 @@ func (p *Plugin) UserHasLeftChannel(c *plugin.Context, channelMember *model.Chan
 		Timestamp:    time.Now().UnixMilli(),
 		TeamID:       channel.TeamId,
 		ChannelID:    channelMember.ChannelId,
+		ChannelDisplayName: channel.DisplayName,
 		TargetUserID: channelMember.UserId,
 	}
 	if actor != nil {
@@ -117,6 +133,7 @@ func (p *Plugin) UserHasLeftChannel(c *plugin.Context, channelMember *model.Chan
 
 // MessageHasBeenUpdated fires after an edited post is committed to the database.
 // Minimum server version: 5.2
+
 func (p *Plugin) MessageHasBeenUpdated(c *plugin.Context, newPost, oldPost *model.Post) {
 	if newPost.IsSystemMessage() {
 		return
@@ -129,12 +146,20 @@ func (p *Plugin) MessageHasBeenUpdated(c *plugin.Context, newPost, oldPost *mode
 
 	cfg := p.getConfiguration()
 	evt := eventEnvelope{
-		EventType: "post_updated",
-		Timestamp: time.Now().UnixMilli(),
-		TeamID:    channel.TeamId,
-		ChannelID: newPost.ChannelId,
-		UserID:    newPost.UserId,
-		PostID:    newPost.Id,
+		EventType:          "post_updated",
+		Timestamp:          time.Now().UnixMilli(),
+		TeamID:             channel.TeamId,
+		ChannelID:          newPost.ChannelId,
+		ChannelDisplayName: channel.DisplayName,
+		UserID:             newPost.UserId,
+		PostID:             newPost.Id,
+		PostType:           newPost.Type,
+		FileIDs:            newPost.FileIds,
+		HasAttachments:     len(newPost.FileIds) > 0,
+		EditedAt:           newPost.EditAt,
+		RootID:             newPost.RootId,
+		IsReply:            newPost.RootId != "",
+		ReplyCount:         newPost.ReplyCount,
 	}
 	if cfg.IncludeMessageContent {
 		evt.Message = newPost.Message
@@ -149,12 +174,14 @@ func (p *Plugin) MessageHasBeenUpdated(c *plugin.Context, newPost, oldPost *mode
 // ReactionHasBeenAdded fires after a reaction is committed to the database.
 // Note: this fires for reactions added by plugins too, including this one.
 // Minimum server version: 5.30
+
 func (p *Plugin) ReactionHasBeenAdded(c *plugin.Context, reaction *model.Reaction) {
 	p.forwardReactionEvent("reaction_added", reaction)
 }
 
 // ReactionHasBeenRemoved fires after a reaction's removal is committed to the database.
 // Minimum server version: 5.30
+
 func (p *Plugin) ReactionHasBeenRemoved(c *plugin.Context, reaction *model.Reaction) {
 	p.forwardReactionEvent("reaction_removed", reaction)
 }
@@ -162,6 +189,7 @@ func (p *Plugin) ReactionHasBeenRemoved(c *plugin.Context, reaction *model.React
 // forwardReactionEvent resolves the reaction's post to find its channel (Reaction
 // itself doesn't carry ChannelId), applies the same private-channel filter as
 // other events, and dispatches to Torq.
+
 func (p *Plugin) forwardReactionEvent(eventType string, reaction *model.Reaction) {
 	post, appErr := p.API.GetPost(reaction.PostId)
 	if appErr != nil {
@@ -175,12 +203,19 @@ func (p *Plugin) forwardReactionEvent(eventType string, reaction *model.Reaction
 	}
 
 	evt := eventEnvelope{
-		EventType: eventType,
-		Timestamp: time.Now().UnixMilli(),
-		TeamID:    channel.TeamId,
-		ChannelID: post.ChannelId,
-		UserID:    reaction.UserId,
-		PostID:    reaction.PostId,
+		EventType:          eventType,
+		Timestamp:          time.Now().UnixMilli(),
+		TeamID:             channel.TeamId,
+		ChannelID:          post.ChannelId,
+		ChannelDisplayName: channel.DisplayName,
+		UserID:             reaction.UserId,
+		PostID:             reaction.PostId,
+		PostType:           post.Type,
+		FileIDs:            post.FileIds,
+		HasAttachments:     len(post.FileIds) > 0,
+		RootID:             post.RootId,
+		IsReply:            post.RootId != "",
+		ReplyCount:         post.ReplyCount,
 		Extra: map[string]any{
 			"emoji_name": reaction.EmojiName,
 		},
@@ -191,6 +226,7 @@ func (p *Plugin) forwardReactionEvent(eventType string, reaction *model.Reaction
 
 // ChannelHasBeenCreated fires after a new channel is created.
 // Minimum server version: 5.2
+
 func (p *Plugin) ChannelHasBeenCreated(c *plugin.Context, channel *model.Channel) {
 	if channel.Type != model.ChannelTypePrivate {
 		return
@@ -205,10 +241,8 @@ func (p *Plugin) ChannelHasBeenCreated(c *plugin.Context, channel *model.Channel
 		Timestamp: time.Now().UnixMilli(),
 		TeamID:    channel.TeamId,
 		ChannelID: channel.Id,
+		ChannelDisplayName: channel.DisplayName,
 		UserID:    channel.CreatorId,
-		Extra: map[string]any{
-			"display_name": channel.DisplayName,
-		},
 	}
 
 	p.torqClient.send(evt)

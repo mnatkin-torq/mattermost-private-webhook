@@ -1,5 +1,9 @@
 // Torq Private Channel Sync
-// version 0.5.0
+//
+// main.go
+// lifecycle plumbing
+//
+// version 1.1.0
 
 package main
 

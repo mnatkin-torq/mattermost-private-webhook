@@ -1,5 +1,10 @@
 // Torq Private Channel Sync
-// version 0.5.0
+//
+// configuration.go
+// lifecycle plumbing
+//
+// version 1.1.0
+
 
 package main
 
@@ -12,6 +17,7 @@ import (
 
 // configuration captures the plugin's runtime settings, sourced from plugin.json's
 // settings_schema via OnConfigurationChange.
+
 type configuration struct {
 	TorqWebhookURL         string
 	TorqWebhookSecretKey   string
@@ -54,6 +60,7 @@ func (c *configuration) channelAllowed(channelID string) bool {
 
 // Plugin-wide config holder with safe concurrent access. Hooks fire concurrently
 // from multiple goroutines, so reads/writes to configuration must be guarded.
+
 type configStore struct {
 	mu  sync.RWMutex
 	cfg *configuration
@@ -77,6 +84,7 @@ func (p *Plugin) getConfiguration() *configuration {
 
 // OnConfigurationChange is invoked by the server whenever an admin saves settings
 // in the System Console for this plugin.
+
 func (p *Plugin) OnConfigurationChange() error {
 	var cfg configuration
 	if err := p.API.LoadPluginConfiguration(&cfg); err != nil {

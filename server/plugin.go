@@ -1,5 +1,10 @@
 // Torq Private Channel Sync
-// version 0.5.0
+//
+// plugin.go
+// lifecycle plumbing
+//
+// version 1.1.0
+
 
 package main
 
@@ -13,6 +18,7 @@ import (
 
 // Plugin implements the Mattermost server plugin interface. Embedding
 // plugin.MattermostPlugin wires up p.API automatically just before OnActivate.
+
 type Plugin struct {
 	plugin.MattermostPlugin
 
