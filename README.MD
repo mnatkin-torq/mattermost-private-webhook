@@ -185,6 +185,39 @@ Note: Mattermost won't surface private channel content to a bot or webhook that 
 }
 ```
 
+#### Post Deleted
+```
+{
+  "channel_display_name": "My Private Channel",
+  "message": "Hi there",
+  "user_id": "3tr7wn3nzj8qzqz58pek5dmuar",
+  "event_type": "post_deleted",
+  "timestamp_ms": 1782513480503,
+  "has_attachments": false,
+  "post_id": "rk4tikrkrjyr8birwiekgqxxky",
+  "team_id": "38zj3sdt5fbxmniu7q8qmafrsh",
+  "is_reply": false,
+  "channel_id": "5fqak1si8irgz8f845gfhbzh8o"
+}
+```
+#### Response Post Deleted
+```
+{
+  "user_id": "3tr7wn3nzj8qzqz58pek5dmuar",
+  "channel_id": "5fqak1si8irgz8f845gfhbzh8o",
+  "post_id": "i1fgtzc7k3fi5dzad86yqr9rte",
+  "is_reply": true,
+  "timestamp_ms": 1782513541686,
+  "message": "Cheers!",
+  "team_id": "38zj3sdt5fbxmniu7q8qmafrsh",
+  "reply_count": 2,
+  "channel_display_name": "My Private Channel",
+  "event_type": "post_deleted",
+  "root_post_id": "uorzhb4ni3rc9edkm7sa8w8wkh",
+  "has_attachments": false
+}
+```
+
 #### Reaction Added
 ```
 {
