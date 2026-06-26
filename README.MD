@@ -10,6 +10,15 @@ Mattermost supports server plugins that hook directly into the server's internal
 No persistent connection problem at all — it's an in-process hook, not a socket.
 This requires System Admin access to install, and someone to maintain a small Go plugin (this feature).
 
+#### The list of activities this PlugIn handles
+* `MessageHasBeenPosted`
+* `UserHasJoinedChannel`
+* `UserHasLeftChannel`
+* `MessageHasBeenUpdated`
+* `ReactionHasBeenAdded`
+* `ReactionHasBeenRemoved`
+   * Important note about ReactionEvents: Reaction events don't carry ChannelId. For ReactionEvents, the PlugIn performs an extra p.API.GetPost call per reaction event to resolve the channel for inclusion in the webhook.  
+
 ### System Requirements
 This PlugIn requires a Mattermost minimum server version of 7.8.0
 
@@ -79,6 +88,7 @@ In your workflow(s) using using the webhook trigger,  branch on the payload data
 Note: Mattermost won't surface private channel content to a bot or webhook that hasn't been added, even with admin-level API tokens in some configurations. If you wish for the bot to interact with a private channel, you'll need a provisioning step (manual or scripted via POST /api/v4/channels/{channel_id}/members) to add your bot to each private channel in which it should interact
 
 ## VERSION HISTORY
+* 0.7.0 - 2026-06-26 - Extended to include message updates and reactions
 * 0.6.0 - 2026-06-26 - Bugfixes and copy
 * 0.5.0 - 2026-06-25 - Bugfixes
 * 0.2.0 - 2026-06-22 - Clean-up, additional improvements

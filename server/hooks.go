@@ -115,6 +115,80 @@ func (p *Plugin) UserHasLeftChannel(c *plugin.Context, channelMember *model.Chan
 	p.torqClient.send(evt)
 }
 
+// MessageHasBeenUpdated fires after an edited post is committed to the database.
+// Minimum server version: 5.2
+func (p *Plugin) MessageHasBeenUpdated(c *plugin.Context, newPost, oldPost *model.Post) {
+	if newPost.IsSystemMessage() {
+		return
+	}
+
+	channel, ok := p.shouldForward(newPost.ChannelId)
+	if !ok {
+		return
+	}
+
+	cfg := p.getConfiguration()
+	evt := eventEnvelope{
+		EventType: "post_updated",
+		Timestamp: time.Now().UnixMilli(),
+		TeamID:    channel.TeamId,
+		ChannelID: newPost.ChannelId,
+		UserID:    newPost.UserId,
+		PostID:    newPost.Id,
+	}
+	if cfg.IncludeMessageContent {
+		evt.Message = newPost.Message
+		evt.Extra = map[string]any{
+			"previous_message": oldPost.Message,
+		}
+	}
+
+	p.torqClient.send(evt)
+}
+
+// ReactionHasBeenAdded fires after a reaction is committed to the database.
+// Note: this fires for reactions added by plugins too, including this one.
+// Minimum server version: 5.30
+func (p *Plugin) ReactionHasBeenAdded(c *plugin.Context, reaction *model.Reaction) {
+	p.forwardReactionEvent("reaction_added", reaction)
+}
+
+// ReactionHasBeenRemoved fires after a reaction's removal is committed to the database.
+// Minimum server version: 5.30
+func (p *Plugin) ReactionHasBeenRemoved(c *plugin.Context, reaction *model.Reaction) {
+	p.forwardReactionEvent("reaction_removed", reaction)
+}
+
+// forwardReactionEvent resolves the reaction's post to find its channel (Reaction
+// itself doesn't carry ChannelId), applies the same private-channel filter as
+// other events, and dispatches to Torq.
+func (p *Plugin) forwardReactionEvent(eventType string, reaction *model.Reaction) {
+	post, appErr := p.API.GetPost(reaction.PostId)
+	if appErr != nil {
+		p.API.LogWarn("Torq Sync: failed to look up post for reaction", "post_id", reaction.PostId, "err", appErr.Error())
+		return
+	}
+
+	channel, ok := p.shouldForward(post.ChannelId)
+	if !ok {
+		return
+	}
+
+	evt := eventEnvelope{
+		EventType: eventType,
+		Timestamp: time.Now().UnixMilli(),
+		TeamID:    channel.TeamId,
+		ChannelID: post.ChannelId,
+		UserID:    reaction.UserId,
+		PostID:    reaction.PostId,
+		Extra: map[string]any{
+			"emoji_name": reaction.EmojiName,
+		},
+	}
+
+	p.torqClient.send(evt)
+}
+
 // ChannelHasBeenCreated fires after a new channel is created.
 // Minimum server version: 5.2
 func (p *Plugin) ChannelHasBeenCreated(c *plugin.Context, channel *model.Channel) {
