@@ -17,7 +17,7 @@ This requires System Admin access to install, and someone to maintain a small Go
 * `MessageHasBeenUpdated`
 * `ReactionHasBeenAdded`
 * `ReactionHasBeenRemoved`
-   * Important note about ReactionEvents: Reaction events don't carry ChannelId. For ReactionEvents, the PlugIn performs an extra p.API.GetPost call per reaction event to resolve the channel for inclusion in the webhook.  
+   * Important note about ReactionEvents: Reaction events don't carry ChannelId. For ReactionEvents, the PlugIn performs an extra `p.API.GetPost` call per reaction event to resolve the channel for inclusion in the webhook; this adds a modest amount of extra API/database load per reaction.  
 
 ### System Requirements
 This PlugIn requires a Mattermost minimum server version of 7.8.0
@@ -31,6 +31,7 @@ cd mattermost-torq-sync
 go mod tidy
 make dist
 ```
+This will produce the mattermost-torq-private-sync.tar.gz required for deployment.
 
 ### Deploy 
 #### In Torq
