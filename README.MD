@@ -70,7 +70,14 @@ Once deployed, `Torq Private Channel Sync` should appear in the Nav Sidebar unde
 10) Navigate back to the `PlugIn Management` configuration screen.  Scroll to the bottom of the page, to the `Installed Plugins` section.  You should see `Torq Private Channel Sync (mattermost-torq-private-sync - <version>)` listed and a green checked `This plugin is running` notice.
    
 ## Using
-Once configured, messages posted in private channels will be transmitted to the configured webhook. The data will look something like this:
+Once configured, messages posted in private channels will be transmitted to the configured webhook. 
+
+In your workflow(s) using using the webhook trigger,  branch on the payload data for your desired activities (such as `event_type` or `channel_id`).
+
+Note: Mattermost won't surface private channel content to a bot or webhook that hasn't been added, even with admin-level API tokens in some configurations. If you wish for the bot to interact with a private channel, you'll need a provisioning step (manual or scripted via POST /api/v4/channels/{channel_id}/members) to add your bot to each private channel in which it should interact
+
+### Sample data
+#### Post Created
 ```
 {
   "event_type": "post_created",
@@ -82,10 +89,49 @@ Once configured, messages posted in private channels will be transmitted to the 
   "channel_id": "5fqak1si8irgz8f845gfhbzh8o"
 }
 ```
-
-In your workflow(s) using using the webhook trigger,  branch on the payload data for your desired activities (such as `event_type` or `channel_id`).
-
-Note: Mattermost won't surface private channel content to a bot or webhook that hasn't been added, even with admin-level API tokens in some configurations. If you wish for the bot to interact with a private channel, you'll need a provisioning step (manual or scripted via POST /api/v4/channels/{channel_id}/members) to add your bot to each private channel in which it should interact
+#### Post Updated
+```
+{
+  "message": "שלום ",
+  "post_id": "zqwffeyhff8zdjcgkcirf5itra",
+  "team_id": "38zj3sdt5fbxmniu7q8qmafrsh",
+  "user_id": "3tr7wn3nzj8qzqz58pek5dmuar",
+  "channel_id": "5fqak1si8irgz8f845gfhbzh8o",
+  "event_type": "post_updated",
+  "timestamp_ms": 1782482948835,
+  "extra": {
+    "previous_message": "Glad tidings unto you."
+  }
+}
+```
+#### Reaction Added
+```
+{
+  "post_id": "zqwffeyhff8zdjcgkcirf5itra",
+  "team_id": "38zj3sdt5fbxmniu7q8qmafrsh",
+  "user_id": "3tr7wn3nzj8qzqz58pek5dmuar",
+  "channel_id": "5fqak1si8irgz8f845gfhbzh8o",
+  "event_type": "reaction_added",
+  "timestamp_ms": 1782482891468,
+  "extra": {
+    "emoji_name": "wave"
+  }
+}
+```
+#### Reaction Removed
+```
+{
+  "timestamp_ms": 1782483108995,
+  "extra": {
+    "emoji_name": "wave"
+  },
+  "post_id": "zqwffeyhff8zdjcgkcirf5itra",
+  "team_id": "38zj3sdt5fbxmniu7q8qmafrsh",
+  "user_id": "3tr7wn3nzj8qzqz58pek5dmuar",
+  "channel_id": "5fqak1si8irgz8f845gfhbzh8o",
+  "event_type": "reaction_removed"
+}
+```
 
 ## VERSION HISTORY
 * 0.7.0 - 2026-06-26 - Extended to include message updates and reactions
