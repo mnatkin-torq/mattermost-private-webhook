@@ -81,6 +81,8 @@ In your workflow(s) using using the webhook trigger,  branch on the payload data
 
 Note: Mattermost won't surface private channel content to a bot or webhook that hasn't been added, even with admin-level API tokens in some configurations. If you wish for the bot to interact with a private channel, you'll need a provisioning step (manual or scripted via POST /api/v4/channels/{channel_id}/members) to add your bot to each private channel in which it should interact
 
+## 
+
 ### Sample data
 #### Post Created
 ```
@@ -207,7 +209,8 @@ Note: Mattermost won't surface private channel content to a bot or webhook that 
   "channel_id": "urwxh1pi4tbhfmuhx33q4pnpxy"
 }
 ```
-#### 
+
+##
 
 ## Disabling or Removing (uninstalling) the PlugIn
 In the unlikely event that you choose to remove the PlugIn, the process is simple:
