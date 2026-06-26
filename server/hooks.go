@@ -3,7 +3,7 @@
 // hooks.go
 // The core logic: filters every event to private channels only, then forwards defined event types
 //
-// version 1.1.0
+// version 1.1.1
 
 package main
 
@@ -168,6 +168,46 @@ func (p *Plugin) MessageHasBeenUpdated(c *plugin.Context, newPost, oldPost *mode
 		}
 	}
 
+	p.torqClient.send(evt)
+}
+
+// MessageHasBeenDeleted fires after a post is marked as deleted in the database
+// (Mattermost soft-deletes posts; the row persists with DeleteAt set). Note this
+// fires for posts deleted by plugins too, including this one if it ever deletes
+// posts itself.
+// Minimum server version: 5.26 -- confirm against your server version before relying on this.
+
+func (p *Plugin) MessageHasBeenDeleted(c *plugin.Context, post *model.Post) {
+	if post.IsSystemMessage() {
+		return
+	}
+ 
+	channel, ok := p.shouldForward(post.ChannelId)
+	if !ok {
+		return
+	}
+ 
+	cfg := p.getConfiguration()
+	evt := eventEnvelope{
+		EventType:          "post_deleted",
+		Timestamp:          time.Now().UnixMilli(),
+		TeamID:             channel.TeamId,
+		ChannelID:          post.ChannelId,
+		ChannelDisplayName: channel.DisplayName,
+		UserID:             post.UserId,
+		PostID:             post.Id,
+		PostType:           post.Type,
+		FileIDs:            post.FileIds,
+		HasAttachments:     len(post.FileIds) > 0,
+		EditedAt:           post.DeleteAt,
+		RootID:             post.RootId,
+		IsReply:            post.RootId != "",
+		ReplyCount:         post.ReplyCount,
+	}
+	if cfg.IncludeMessageContent {
+		evt.Message = post.Message
+	}
+ 
 	p.torqClient.send(evt)
 }
 

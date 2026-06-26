@@ -19,6 +19,8 @@ This requires System Admin access to install, and someone to maintain a small Go
 * `UserHasJoinedChannel`
 * `UserHasLeftChannel`
 * `MessageHasBeenUpdated`
+* `MessageHasBeenDeleted`
+   * Note: Mattermost soft-deletes posts; the row persists with DeleteAt set). This fires for posts deleted by plugins, too, including this one, if it ever deletes posts itself.
 * `ReactionHasBeenAdded`
 * `ReactionHasBeenRemoved`
    * Important note about ReactionEvents: Reaction events don't carry ChannelId. For ReactionEvents, the PlugIn performs an extra `p.API.GetPost` call per reaction event to resolve the channel for inclusion in the webhook; this adds a modest amount of extra API/database load per reaction.  
@@ -101,6 +103,25 @@ Note: Mattermost won't surface private channel content to a bot or webhook that 
   "message": "Hello world!",
   "has_attachments": false,
   "post_id": "uorzhb4ni3rc9edkm7sa8w8wkh"
+}
+```
+
+#### Post with File Attachment Created
+```
+{
+  "timestamp_ms": 1782512607912,
+  "channel_display_name": "My Private Channel",
+  "message": "Ask, and ye shall receive @torqbot ",
+  "team_id": "38zj3sdt5fbxmniu7q8qmafrsh",
+  "is_reply": false,
+  "has_attachments": true,
+  "post_id": "9fot1ag55ffhdqnid1maytugka",
+  "user_id": "3tr7wn3nzj8qzqz58pek5dmuar",
+  "file_ids": [
+    "akyzkpkgi7g9fdmjkkui8tcwbe"
+  ],
+  "channel_id": "5fqak1si8irgz8f845gfhbzh8o",
+  "event_type": "post_created"
 }
 ```
 
@@ -228,6 +249,7 @@ In the unlikely event that you choose to remove the PlugIn, the process is simpl
 
 ##
 ## VERSION HISTORY
+* 1.1.1 - 2026-06-26 - Add handler for `MessageHasBeenDeleted` events
 * 1.1.0 - 2026-06-26 - Expand eventEnvelope payload to include additional fields
 * 1.0.0 - 2026-06-26 - Initial release
 * 0.7.0 - 2026-06-26 - Extended to include message updates and reactions
