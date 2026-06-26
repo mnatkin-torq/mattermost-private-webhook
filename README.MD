@@ -249,7 +249,7 @@ In the unlikely event that you choose to remove the PlugIn, the process is simpl
 
 ##
 ## VERSION HISTORY
-* 1.1.1 - 2026-06-26 - Add handler for `MessageHasBeenDeleted` events
+* 1.2.0 - 2026-06-26 - Add handler for `MessageHasBeenDeleted` events
 * 1.1.0 - 2026-06-26 - Expand eventEnvelope payload to include additional fields
 * 1.0.0 - 2026-06-26 - Initial release
 * 0.7.0 - 2026-06-26 - Extended to include message updates and reactions

@@ -3,7 +3,7 @@
 // hooks.go
 // The core logic: filters every event to private channels only, then forwards defined event types
 //
-// version 1.1.1
+// version 1.2.0
 
 package main
 
