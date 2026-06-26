@@ -31,7 +31,7 @@ cd mattermost-torq-sync
 go mod tidy
 make dist
 ```
-This will produce the mattermost-torq-private-sync.tar.gz required for deployment.
+This will produce the `mattermost-torq-private-sync.tar.gz` required for deployment.
 
 ### Deploy 
 #### In Torq
@@ -39,7 +39,7 @@ Create an HTTP webhook trigger, add your desired Authentication shared secret he
 
 #### In Mattermost
 ##### TL;DR: 
-Upload mattermost-torq-private-sync.tar.gz via System Console → Plugins → Plugin Management 
+Upload `mattermost-torq-private-sync.tar.gz` via System Console → Plugins → Plugin Management 
 ##### Step-by-step:
 1. Navigate to the System Console
 2. Scroll to the PlugIns Section on the left Nav Bar
