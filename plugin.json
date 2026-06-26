@@ -1,10 +1,10 @@
 {
-  "id": "io.torq.torq-sync",
+  "id": "mattermost-torq-private-sync",
   "name": "Torq Private Channel Sync",
   "description": "This PlugIn forwards private channel events (messages, membership changes) to Torq via HTTP webhook trigger.",
   "homepage_url": "https://torq.io",
   "support_url": "https://support.torq.io",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "min_server_version": "7.8.0",
   "server": {
     "executables": {
@@ -26,16 +26,16 @@
       },
       {
         "key": "TorqWebhookSecretKey",
-        "display_name": "Torq Webhook Secret Key (Auth header)",
+        "display_name": "Torq Webhook Authentication Header Name (Auth secret header)",
         "type": "text",
-        "help_text": "Shared secret Key (Auth header). Configure the matching key as a condition in your Torq webhook trigger. This is optional, but recommended.",
+        "help_text": "The Name of your Shared Secret Authentication Header. Configure the matching key as a condition in your Torq webhook trigger. This is optional, but recommended.",
         "default": "X-Mattermost-Secret"
       },
       {
         "key": "TorqWebhookSecret",
-        "display_name": "Torq Webhook Secret",
+        "display_name": "Torq Webhook Authentication Header Secret",
         "type": "text",
-        "help_text": "Shared secret sent with the defined auth header. Configure the matching value as a condition in your Torq webhook trigger. This is required only if you're defining an Auth header.",
+        "help_text": "The Shared Secret Authentication Header value sent with the defined auth header. Configure the matching value as a condition in your Torq webhook trigger. This is required only if you're defining an Auth header.",
         "secret": true,
         "default": ""
       },

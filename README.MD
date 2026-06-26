@@ -10,25 +10,29 @@ Mattermost supports server plugins that hook directly into the server's internal
 No persistent connection problem at all — it's an in-process hook, not a socket.
 This requires System Admin access to install, and someone to maintain a small Go plugin (this feature).
 
-## Building and deploying (if starting from source)
-
 ### System Requirements
 This PlugIn requires a Mattermost minimum server version of 7.8.0
 
+## Building and deploying (if starting from source)
+
 ### To build from source
 ```
-tar -xzf mattermost-torq-sync.tar.gz
+tar -xzf mattermost-torq-sync.tar.gz // git clone from the repository
 cd mattermost-torq-sync
 go mod tidy
 make dist
 ```
 
 ### Deploy 
-Upload dist/com.yourorg.torq-sync.tar.gz via System Console → Plugins → Plugin Management, then configure the Torq webhook URL, secret key, and secret value in the plugin's settings page.
-On the Torq side: create an HTTP webhook trigger, add a condition checking that the secret key and value matches your configured value, then branch on event_type in the payload.
+#### In Torq
+Create an HTTP webhook trigger, add your desired Authentication shared secret header (optional).  In your workflow(s) using using the webhook trigger,  branch on event_type in the payload for your desired activities.
+
+#### In Mattermost
+Upload mattermost-torq-sync.tar.gz via System Console → Plugins → Plugin Management, then configure the Torq webhook URL, Authentication shared secret key, and secret value in the plugin's settings page.
 
 
 ## VERSION HISTORY
+0.6.0 - 2026-06-26 - Bugfixes and copy
 0.5.0 - 2026-06-25 - Bugfixes
 0.2.0 - 2026-06-22 - Clean-up, additional improvements
 0.1.0 - 2026-06-18 - Initial draft
