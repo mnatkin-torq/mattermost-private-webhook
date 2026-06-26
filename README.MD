@@ -23,9 +23,11 @@ This requires System Admin access to install, and someone to maintain a small Go
 * `ReactionHasBeenRemoved`
    * Important note about ReactionEvents: Reaction events don't carry ChannelId. For ReactionEvents, the PlugIn performs an extra `p.API.GetPost` call per reaction event to resolve the channel for inclusion in the webhook; this adds a modest amount of extra API/database load per reaction.  
 
+##
 ### System Requirements
 This PlugIn requires a Mattermost minimum server version of 7.8.0
 
+##
 ## Building and deploying
 
 ### To build from source
@@ -44,6 +46,7 @@ Create an HTTP webhook trigger, add your desired Authentication shared secret he
 #### In Mattermost
 ##### TL;DR: 
 Upload `mattermost-torq-private-sync.tar.gz` via System Console → Plugins → Plugin Management 
+
 ##### Step-by-step:
 1. Navigate to the System Console
 2. Scroll to the PlugIns Section on the left Nav Bar
@@ -57,6 +60,7 @@ Upload `mattermost-torq-private-sync.tar.gz` via System Console → Plugins → 
 
 ### Configure
 Once deployed, `Torq Private Channel Sync` should appear in the Nav Sidebar under the `PlugIns` section. Navigate to this section to configure the PlugIn
+
 ##### Step-by-step:
 1. Navigate to the System Console
 2. Scroll to the PlugIns Section on the left Nav Bar
@@ -73,7 +77,8 @@ Once deployed, `Torq Private Channel Sync` should appear in the Nav Sidebar unde
    * If `True`, the message will be included in the trigger payload. If `False` only metadata (channel, user, post ID, timestamp) is sent.  A separate action will be required to pull the payload. 
 9) Click `Save` to save your settings
 10) Navigate back to the `PlugIn Management` configuration screen.  Scroll to the bottom of the page, to the `Installed Plugins` section.  You should see `Torq Private Channel Sync (mattermost-torq-private-sync - <version>)` listed and a green checked `This plugin is running` notice.
-   
+
+##   
 ## Using
 Once configured, messages posted in private channels will be transmitted to the configured webhook. 
 
@@ -82,7 +87,6 @@ In your workflow(s) using using the webhook trigger,  branch on the payload data
 Note: Mattermost won't surface private channel content to a bot or webhook that hasn't been added, even with admin-level API tokens in some configurations. If you wish for the bot to interact with a private channel, you'll need a provisioning step (manual or scripted via POST /api/v4/channels/{channel_id}/members) to add your bot to each private channel in which it should interact
 
 ## 
-
 ### Sample data
 #### Post Created
 ```
@@ -211,7 +215,6 @@ Note: Mattermost won't surface private channel content to a bot or webhook that 
 ```
 
 ##
-
 ## Disabling or Removing (uninstalling) the PlugIn
 In the unlikely event that you choose to remove the PlugIn, the process is simple:
 
@@ -223,6 +226,7 @@ In the unlikely event that you choose to remove the PlugIn, the process is simpl
 5. Select the action you wish to take on the PlugIn - `Disable` or `Remove`
    * You may also disable the PlugIn from the `Torq Private Channel Sync` PlugIn Settings page, by setting `Enable Plugin` to `False`
 
+##
 ## VERSION HISTORY
 * 1.1.0 - 2026-06-26 - Expand eventEnvelope payload to include additional fields
 * 1.0.0 - 2026-06-26 - Initial release
@@ -232,5 +236,7 @@ In the unlikely event that you choose to remove the PlugIn, the process is simpl
 * 0.2.0 - 2026-06-22 - Clean-up, additional improvements
 * 0.1.0 - 2026-06-18 - Initial draft
 
+##
 ## DEVELOPMENT NOTES
 Parts of this PlugIn were written with the assistance of generative AI.
+##
