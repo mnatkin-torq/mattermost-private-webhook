@@ -135,6 +135,7 @@ Note: Mattermost won't surface private channel content to a bot or webhook that 
 ```
 
 ## VERSION HISTORY
+* 1.0.0 - 2026-06-26 - Initial release
 * 0.7.0 - 2026-06-26 - Extended to include message updates and reactions
 * 0.6.0 - 2026-06-26 - Bugfixes and copy
 * 0.5.0 - 2026-06-25 - Bugfixes
