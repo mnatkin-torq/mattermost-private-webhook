@@ -5,7 +5,7 @@ Mattermost's classic Outgoing Webhooks feature is scoped to a specific channel (
 So for private channel data, you're left with two real options: the websocket, or Mattermost's Plugin system, which can run server-side and isn't bound by that public-channel restriction.
 
 Since Torq doesn't hold a persistent inbound connection (Torq does not support websockets), we need something on the Mattermost side (or adjacent to it) that does, and which then talks to Torq over native HTTP request/response — which Torq handles natively via its webhook trigger.
-Mattermost supports server plugins that hook directly into the server's internal event system — not the websocket, the actual Go-level Hooks interface (MessageHasBeenPosted, ChannelHasBeenCreated, UserHasJoinedChannel, etc.). This runs inside the Mattermost server process, sees private channel events natively (no membership/visibility issue), and can make an outbound HTTPS POST to a Torq webhook URL per event.
+Mattermost supports server plugins that hook directly into the server's internal event system — not the websocket, the actual Go-level Hooks interface (`MessageHasBeenPosted`, `ChannelHasBeenCreated`, `UserHasJoinedChannel`, etc.). This runs inside the Mattermost server process, sees private channel events natively (no membership/visibility issue), and can make an outbound HTTPS POST to a Torq webhook URL per event.
 
 No persistent connection problem at all — it's an in-process hook, not a socket.
 This requires System Admin access to install, and someone to maintain a small Go plugin (this feature).
@@ -25,7 +25,7 @@ make dist
 
 ### Deploy 
 #### In Torq
-Create an HTTP webhook trigger, add your desired Authentication shared secret header (optional).  In your workflow(s) using using the webhook trigger,  branch on event_type in the payload for your desired activities.
+Create an HTTP webhook trigger, add your desired Authentication shared secret header (optional).  
 
 #### In Mattermost
 ##### TL;DR: 
@@ -50,6 +50,7 @@ Once deployed, `Torq Private Channel Sync` should appear in the Nav Sidebar unde
 4. Set `Enable Plugin` to `True`
 5. Paste your Torq Webhook URL into the `Torq Webhook URL` dialogue box (generally `https://hooks.[eu.|jp.]torq.io/v1/webhooks/<UUID>`)
 6. (Optional but recommended) Add an Authentication Header (shared secret) as configured in your Torq Webhook
+   * One important note:  the secret will display on the screen until the window is refreshed or you navigate away from and back to the PlugIn configuration page.
 7. Select whether to sync all private channels or selected channels only
    * In `Sync all private channels` set either `True` or `False`
    * If `False`, choose the channels to sync in the `Channel ID allow-list (comma-separated)` parameter
@@ -59,7 +60,23 @@ Once deployed, `Torq Private Channel Sync` should appear in the Nav Sidebar unde
 9) Click `Save` to save your settings
 10) Navigate back to the `PlugIn Management` configuration screen.  Scroll to the bottom of the page, to the `Installed Plugins` section.  You should see `Torq Private Channel Sync (mattermost-torq-private-sync - <version>)` listed and a green checked `This plugin is running` notice.
    
+## Using
+Once configured, messages posted in private channels will be transmitted to the configured webhook. The data will look something like this:
+```
+{
+  "event_type": "post_created",
+  "timestamp_ms": 1782480519794,
+  "message": "Hello world!",
+  "post_id": "raher4m873bhir5wjedecyys8w",
+  "team_id": "38zj3sdt5fbxmniu7q8qmafrsh",
+  "user_id": "3tr7wn3nzj8qzqz58pek5dmuar",
+  "channel_id": "5fqak1si8irgz8f845gfhbzh8o"
+}
+```
 
+In your workflow(s) using using the webhook trigger,  branch on the payload data for your desired activities (such as `event_type` or `channel_id`).
+
+Note: Mattermost won't surface private channel content to a bot or webhook that hasn't been added, even with admin-level API tokens in some configurations. If you wish for the bot to interact with a private channel, you'll need a provisioning step (manual or scripted via POST /api/v4/channels/{channel_id}/members) to add your bot to each private channel in which it should interact
 
 ## VERSION HISTORY
 * 0.6.0 - 2026-06-26 - Bugfixes and copy
