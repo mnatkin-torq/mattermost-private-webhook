@@ -17,7 +17,7 @@ This PlugIn requires a Mattermost minimum server version of 7.8.0
 
 ### To build from source
 ```
-tar -xzf mattermost-torq-sync.tar.gz // git clone from the repository
+tar -xzf mattermost-torq-private-sync.tar.gz // git clone from the repository
 cd mattermost-torq-sync
 go mod tidy
 make dist
@@ -28,14 +28,14 @@ make dist
 Create an HTTP webhook trigger, add your desired Authentication shared secret header (optional).  In your workflow(s) using using the webhook trigger,  branch on event_type in the payload for your desired activities.
 
 #### In Mattermost
-Upload mattermost-torq-sync.tar.gz via System Console → Plugins → Plugin Management, then configure the Torq webhook URL, Authentication shared secret key, and secret value in the plugin's settings page.
+Upload mattermost-torq-private-sync.tar.gz via System Console → Plugins → Plugin Management, then configure the Torq webhook URL, Authentication shared secret key, and secret value in the plugin's settings page.
 
 
 ## VERSION HISTORY
-0.6.0 - 2026-06-26 - Bugfixes and copy
-0.5.0 - 2026-06-25 - Bugfixes
-0.2.0 - 2026-06-22 - Clean-up, additional improvements
-0.1.0 - 2026-06-18 - Initial draft
+* 0.6.0 - 2026-06-26 - Bugfixes and copy
+* 0.5.0 - 2026-06-25 - Bugfixes
+* 0.2.0 - 2026-06-22 - Clean-up, additional improvements
+* 0.1.0 - 2026-06-18 - Initial draft
 
 ## DEVELOPMENT NOTES
 Parts of this PlugIn were written with the assistance of generative AI.
