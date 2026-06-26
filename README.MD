@@ -1,13 +1,14 @@
 # Torq Mattermost Private Channel Webhook PlugIn
 
 ## PURPOSE
-Mattermost's classic Outgoing Webhooks feature is scoped to a specific channel (or all channels in a team for public ones), but it's designed around trigger-word matching on messages in public channels only. There's no admin console option to attach an outgoing webhook to a private channel — it's a deliberate product limitation, not a config you're missing.
+Mattermost's classic Outgoing Webhooks feature is scoped to a specific channel (or all channels in a team for public ones), but it's designed around trigger-word matching on messages in public channels only. There's no admin console option to attach an outgoing webhook to a private channel; this is a deliberate product limitation, not a config you're missing.
 So for private channel data, you're left with two real options: the websocket, or Mattermost's Plugin system, which can run server-side and isn't bound by that public-channel restriction.
 
-Since Torq doesn't hold a persistent inbound connection (Torq does not support websockets), we need something on the Mattermost side (or adjacent to it) that does, and which then talks to Torq over native HTTP request/response — which Torq handles natively via its webhook trigger.
-Mattermost supports server plugins that hook directly into the server's internal event system — not the websocket, the actual Go-level Hooks interface (`MessageHasBeenPosted`, `ChannelHasBeenCreated`, `UserHasJoinedChannel`, etc.). This runs inside the Mattermost server process, sees private channel events natively (no membership/visibility issue), and can make an outbound HTTPS POST to a Torq webhook URL per event.
+Since Torq doesn't hold a persistent inbound connection (Torq does not support websockets), we require something on the Mattermost side (or adjacent to it) that does,  which then talks to Torq over native HTTP request/response — which Torq handles natively via its webhook trigger.
 
-No persistent connection problem at all — it's an in-process hook, not a socket.
+Mattermost supports server plugins that hook directly into the server's internal event system (not the websocket, the actual Go-level Hooks interface (`MessageHasBeenPosted`, `ChannelHasBeenCreated`, `UserHasJoinedChannel`, etc.)). This runs inside the Mattermost server process, sees private channel events natively (no membership/visibility issue), and can make an outbound HTTP/S POST to a Torq webhook URL per event.
+
+There is no persistent connection problem at all, as it's an in-process hook, not a socket.
 This requires System Admin access to install, and someone to maintain a small Go plugin (this feature).
 
 #### The list of activities this PlugIn handles
