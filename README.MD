@@ -46,10 +46,10 @@ Upload `mattermost-torq-private-sync.tar.gz` via System Console → Plugins → 
 2. Scroll to the PlugIns Section on the left Nav Bar
 3. Click on `PlugIn Management` in that section
 4. On the `PlugIn Management` configuration screen
-   a) Ensure that `Enable Plugins` is set to `True`
-   b) Navigate to the `Upload Plugin` section and click the `Choose File` button
-   c) Select the mattermost-torq-private-sync.tar.gz file from the file picker
-   d) Click the "Upload" button
+   1. Ensure that `Enable Plugins` is set to `True`
+   2. Navigate to the `Upload Plugin` section and click the `Choose File` button
+   3. Select the mattermost-torq-private-sync.tar.gz file from the file picker
+   4. Click the "Upload" button
 5. If completed successfully, you should see "Successfully uploaded plugin from mattermost-torq-private-sync.tar.gz" 
 
 ### Configure
