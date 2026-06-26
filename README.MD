@@ -13,7 +13,7 @@ This requires System Admin access to install, and someone to maintain a small Go
 ### System Requirements
 This PlugIn requires a Mattermost minimum server version of 7.8.0
 
-## Building and deploying (if starting from source)
+## Building and deploying
 
 ### To build from source
 ```
