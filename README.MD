@@ -1,4 +1,4 @@
-# Torq Mattermost Private Webhook PlugIn
+# Torq Mattermost Private Channel Webhook PlugIn
 
 ## PURPOSE
 Mattermost's classic Outgoing Webhooks feature is scoped to a specific channel (or all channels in a team for public ones), but it's designed around trigger-word matching on messages in public channels only. There's no admin console option to attach an outgoing webhook to a private channel — it's a deliberate product limitation, not a config you're missing.
