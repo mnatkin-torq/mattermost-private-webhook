@@ -134,6 +134,32 @@ Note: Mattermost won't surface private channel content to a bot or webhook that 
 }
 ```
 
+#### Channel Created
+```
+{
+  "event_type": "channel_created",
+  "timestamp_ms": 1782486052424,
+  "extra": {
+    "display_name": "Another Private Channel"
+  },
+  "team_id": "38zj3sdt5fbxmniu7q8qmafrsh",
+  "user_id": "3tr7wn3nzj8qzqz58pek5dmuar",
+  "channel_id": "urwxh1pi4tbhfmuhx33q4pnpxy"
+}
+```
+#### 
+
+## Disabling or Removing (uninstalling) the PlugIn
+In the unlikely event that you choose to remove the PlugIn, the process is simple:
+
+1. Navigate to the System Console
+2. Scroll to the PlugIns Section on the left Nav Bar
+3. Click on `PlugIn Management` in that section
+4. On the `PlugIn Management` configuration screen, scroll to the bottom of the menu, to the `Installed Plugins` section
+   * You should see `Torq Private Channel Sync (mattermost-torq-private-sync - <version>)` listed and a green checked `This plugin is running` notice.
+5. Select the action you wish to take on the PlugIn - `Disable` or `Remove`
+   * You may also disable the PlugIn from the `Torq Private Channel Sync` PlugIn Settings page, by setting `Enable Plugin` to `False`
+
 ## VERSION HISTORY
 * 1.0.0 - 2026-06-26 - Initial release
 * 0.7.0 - 2026-06-26 - Extended to include message updates and reactions
